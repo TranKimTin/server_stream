@@ -2,6 +2,18 @@ const express = require("express");
 const app = express();
 const fs = require("fs");
 
+app.get("/", function (req, res) {
+    let listFile = fs.readdirSync('./video');
+    listFile = listFile.filter(item => item.slice(item.length - 4) == '.mp4').map(item => item.slice(0, item.length - 4));
+    console.log(listFile);
+    if (listFile.length == 0) return res.send('Không có video nào');
+    let html = listFile.map(item => `
+        <div>
+            <a href="/${item}">${item}</a>
+        </div>
+    `).join('\n');
+    res.send(html);
+});
 app.get("/:name", function (req, res) {
     let { name } = req.params;
     let html = `
